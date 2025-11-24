@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { TrendingUp, Sparkles, Building2, Scale, Globe, Zap } from 'lucide-react'
+import { TrendingUp, Sparkles, Building2, Scale, Globe, Zap, ArrowLeftRight, LucideIcon } from 'lucide-react'
+import SixQuestions from './SixQuestions'
 import './App.css'
 
 interface Layer {
@@ -11,10 +12,10 @@ interface Layer {
   metrics: string
   examples: string[]
   color: string
-  icon: any
+  icon: LucideIcon
 }
 
-function App() {
+function ParadigmShift() {
   const [selectedLayer, setSelectedLayer] = useState<number | null>(null)
 
   const layers: Layer[] = [
@@ -229,6 +230,30 @@ function App() {
           </p>
         </div>
       </div>
+    </div>
+  )
+}
+
+function App() {
+  const [currentView, setCurrentView] = useState<'paradigm' | 'questions'>('paradigm')
+
+  return (
+    <div className="relative">
+      {/* Navigation Toggle */}
+      <div className="fixed top-6 right-6 z-50">
+        <button
+          onClick={() => setCurrentView(currentView === 'paradigm' ? 'questions' : 'paradigm')}
+          className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-full shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-white/20"
+        >
+          <ArrowLeftRight className="w-5 h-5" />
+          <span className="text-sm md:text-base">
+            {currentView === 'paradigm' ? '6つの質へ' : '6階層へ'}
+          </span>
+        </button>
+      </div>
+
+      {/* View Content */}
+      {currentView === 'paradigm' ? <ParadigmShift /> : <SixQuestions />}
     </div>
   )
 }
