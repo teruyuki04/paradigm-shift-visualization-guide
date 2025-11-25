@@ -1,6 +1,7 @@
 import { useState } from 'react'
-import { TrendingUp, Sparkles, Building2, Scale, Globe, Zap, ArrowLeftRight, LucideIcon } from 'lucide-react'
+import { TrendingUp, Sparkles, Building2, Scale, Globe, Zap, ArrowLeftRight, FileQuestion, LucideIcon } from 'lucide-react'
 import SixQuestions from './SixQuestions'
+import Questionnaire60 from './Questionnaire60'
 import './App.css'
 
 interface Layer {
@@ -235,25 +236,52 @@ function ParadigmShift() {
 }
 
 function App() {
-  const [currentView, setCurrentView] = useState<'paradigm' | 'questions'>('paradigm')
+  const [currentView, setCurrentView] = useState<'paradigm' | 'questions' | 'questionnaire60'>('paradigm')
+
+  const cycleView = () => {
+    if (currentView === 'paradigm') {
+      setCurrentView('questions')
+    } else if (currentView === 'questions') {
+      setCurrentView('questionnaire60')
+    } else {
+      setCurrentView('paradigm')
+    }
+  }
+
+  const getButtonLabel = () => {
+    if (currentView === 'paradigm') return '6つの質へ'
+    if (currentView === 'questions') return '60問診断へ'
+    return '6階層へ'
+  }
 
   return (
     <div className="relative">
       {/* Navigation Toggle */}
-      <div className="fixed top-6 right-6 z-50">
+      <div className="fixed top-6 right-6 z-50 flex gap-3">
         <button
-          onClick={() => setCurrentView(currentView === 'paradigm' ? 'questions' : 'paradigm')}
+          onClick={cycleView}
           className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-full shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-white/20"
         >
           <ArrowLeftRight className="w-5 h-5" />
           <span className="text-sm md:text-base">
-            {currentView === 'paradigm' ? '6つの質へ' : '6階層へ'}
+            {getButtonLabel()}
           </span>
         </button>
+        {currentView !== 'questionnaire60' && (
+          <button
+            onClick={() => setCurrentView('questionnaire60')}
+            className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-semibold rounded-full shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-white/20"
+          >
+            <FileQuestion className="w-5 h-5" />
+            <span className="text-sm md:text-base">60問診断</span>
+          </button>
+        )}
       </div>
 
       {/* View Content */}
-      {currentView === 'paradigm' ? <ParadigmShift /> : <SixQuestions />}
+      {currentView === 'paradigm' && <ParadigmShift />}
+      {currentView === 'questions' && <SixQuestions />}
+      {currentView === 'questionnaire60' && <Questionnaire60 />}
     </div>
   )
 }
